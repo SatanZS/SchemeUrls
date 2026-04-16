@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="手机端常见 URL Scheme 清单，支持目录导航与一键复制/唤起，覆盖系统、国内外 App 与浏览器场景。" />
+  <meta name="format-detection" content="telephone=no,email=no,address=no,date=no" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="URL Scheme 工具页" />
+  <title>手机端常见 URL Scheme 大全</title>
+  <style>
+    :root { --bg:#f6f8fc; --text:#1f2a44; --line:#d9e1ef; --pad:16px; --brand:#3b6ff6; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+    .layout { display: block; min-height: 100vh; }
+    .sidebar { position: fixed; top: 0; left: 0; right: 0; z-index: 20; padding: 10px var(--pad); border-bottom: 1px solid var(--line); background: #fff; box-shadow: 0 2px 10px rgba(23,37,84,.06); }
+    .title { margin: 0 0 10px; font-size: 16px; font-weight: 700; }
+    .toc-select-wrap { display: flex; align-items: center; gap: 8px; }
+    .toc-select-wrap label { font-size: 13px; opacity: .8; }
+    .toc-select {
+      width: min(560px, 100%);
+      padding: 6px 8px;
+      border: 1px solid #cfdaf1;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .toc-select:focus { outline: none; border-color: #a8bff8; box-shadow: 0 0 0 3px rgba(59,111,246,.14); }
+    .content { width: 100%; max-width: none; padding: 20px; padding-top: 116px; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: var(--pad); box-shadow: 0 8px 24px rgba(31,42,68,.05); }
+    h1, h2, h3, h4, p, ul, blockquote, pre { margin: 0 0 10px; }
+    h2 { padding-top: 8px; }
+    blockquote { padding: 8px 10px; border-left: 3px solid var(--brand); background: #f7f9ff; border-radius: 0 8px 8px 0; }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
+    .table-wrap { margin: 10px 0 16px; border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; background: #fff; }
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { position: sticky; top: 0; z-index: 1; background: #f4f7ff; }
+    tbody tr:hover { background: #fcfdff; }
+    thead tr { background: #f4f7ff; }
+    tr:last-child td { border-bottom: 0; }
+    code { padding: 1px 6px; border: 1px solid #d4def6; border-radius: 6px; background: #f5f8ff; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { padding: 10px; border: 1px solid #dbe3f6; border-radius: 10px; background: #f8faff; overflow: auto; }
+    pre code { border: 0; background: transparent; padding: 0; }
+    .scheme-cell { min-width: 240px; }
+    .op-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 210px; }
+    .scheme-param-input { width: 180px; padding: 5px 8px; border: 1px solid #cfdaef; border-radius: 8px; background: #fff; font-size: 12px; }
+    .scheme-param-input:focus { outline: none; border-color: #a8bff8; box-shadow: 0 0 0 3px rgba(59,111,246,.14); }
+    .scheme-param-hint { font-size: 11px; opacity: .65; }
+    .scheme-actions { display: flex; gap: 6px; }
+    .scheme-actions button { padding: 5px 10px; border: 1px solid #c7d5f4; border-radius: 8px; background: #f5f8ff; color: #23438a; font-size: 12px; cursor: pointer; transition: all .15s ease; }
+    .scheme-actions button:hover { border-color: #a8bff8; background: #edf3ff; }
+    .hint { margin-top: 8px; opacity: .7; font-size: 12px; }
+    .copied { margin-left: 8px; font-size: 12px; color: var(--brand); }
+    @media (max-width: 980px) {
+      .sidebar { padding: 8px 12px; }
+      .title { margin-bottom: 6px; font-size: 15px; }
+      .content { padding-top: 106px; }
+    }
+    @media (max-width: 768px) {
+      :root { --pad: 12px; }
+      body { font-size: 16px; }
+      .content { padding: 12px; padding-top: 104px; }
+      h1 { font-size: 26px; }
+      h2 { font-size: 22px; }
+      h3 { font-size: 20px; }
+      h4 { font-size: 18px; }
+      th, td { padding: 8px; font-size: 15px; }
+      .scheme-cell { min-width: 200px; }
+      .op-cell { min-width: 210px; }
+      .scheme-param-input { width: 100%; min-width: 210px; font-size: 14px; }
+      .scheme-param-hint { font-size: 12px; }
+      .scheme-actions button { min-height: 34px; font-size: 14px; }
+      .toc-select-wrap label { font-size: 12px; }
+      .toc-select { font-size: 13px; }
+      .hint, .copied { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="侧栏：目录">
+      <div class="title">URL Scheme 工具页</div>
+      <div class="toc-select-wrap">
+        <label for="tocSelect">目录</label>
+        <select id="tocSelect" class="toc-select" aria-label="选择分类并跳转">
+          <option value="">请选择目录...</option>
+          <option value="#sec-intro">文档说明</option>
+          <optgroup label="一、系统级 Scheme">
+            <option value="#sec-system">系统级总览</option>
+            <option value="#sec-system-common">通用（iOS & Android）</option>
+            <option value="#sec-system-ios">iOS 专属</option>
+            <option value="#sec-system-ios-settings">常用 iOS 设置页跳转</option>
+            <option value="#sec-system-android">Android 专属</option>
+          </optgroup>
+          <optgroup label="二、国内 App Scheme">
+            <option value="#sec-cn">国内 App 总览</option>
+            <option value="#sec-cn-social">社交通讯</option>
+            <option value="#sec-cn-pay">支付金融</option>
+            <option value="#sec-cn-video">短视频 / 内容</option>
+            <option value="#sec-cn-shopping">电商购物</option>
+            <option value="#sec-cn-map">地图导航</option>
+            <option value="#sec-cn-tools">工具 / 其他</option>
+          </optgroup>
+          <option value="#sec-global">三、国外 App Scheme</option>
+          <option value="#sec-browser">四、浏览器 Scheme</option>
+          <option value="#sec-code">五、代码示例</option>
+          <option value="#sec-notes">六、注意事项</option>
+        </select>
+      </div>
+      <p class="hint">支持：目录跳转、一键复制、一键唤起（若环境支持）。</p>
+    </aside>
+    <main class="content" id="main">
+      <article class="card" aria-label="正文">
+        <h1>手机端常见 URL Scheme 大全</h1>
+        <div id="sec-intro">
+          <blockquote>说明：部分 App（尤其是国内 App）的 Scheme 会随版本更新而变化，且官方通常不对外公布，建议以实际测试为准。</blockquote>
+        </div>
+        <hr />
+
+        <h2 id="sec-system">一、系统级 Scheme</h2>
+        <h3 id="sec-system-common">通用（iOS & Android）</h3>
+        <div id="tbl-system-common"></div>
+
+        <h3 id="sec-system-ios">iOS 专属</h3>
+        <div id="tbl-system-ios"></div>
+
+        <h4 id="sec-system-ios-settings">常用 iOS 设置页跳转（<code>App-Prefs:</code>）</h4>
+        <div id="tbl-system-ios-settings"></div>
+
+        <h3 id="sec-system-android">Android 专属</h3>
+        <div id="tbl-system-android"></div>
+
+        <hr />
+        <h2 id="sec-cn">二、国内 App Scheme</h2>
+        <h3 id="sec-cn-social">社交通讯</h3>
+        <div id="tbl-cn-social"></div>
+
+        <h3 id="sec-cn-pay">支付金融</h3>
+        <div id="tbl-cn-pay"></div>
+
+        <h3 id="sec-cn-video">短视频 / 内容</h3>
+        <div id="tbl-cn-video"></div>
+
+        <h3 id="sec-cn-shopping">电商购物</h3>
+        <div id="tbl-cn-shopping"></div>
+
+        <h3 id="sec-cn-map">地图导航</h3>
+        <div id="tbl-cn-map"></div>
+
+        <h3 id="sec-cn-tools">工具 / 其他</h3>
+        <div id="tbl-cn-tools"></div>
+
+        <hr />
+        <h2 id="sec-global">三、国外 App Scheme</h2>
+        <div id="tbl-global"></div>
+
+        <hr />
+        <h2 id="sec-browser">四、浏览器 Scheme</h2>
+        <div id="tbl-browser"></div>
+
+        <hr />
+        <h2 id="sec-code">五、代码示例</h2>
+        <h3>iOS（Swift）</h3>
+        <pre><code class="swift">if let url = URL(string: "weixin://") {
+    UIApplication.shared.open(url)
+}</code></pre>
+
+        <h3>Android（Kotlin）</h3>
+        <pre><code class="kotlin">val intent = Intent(Intent.ACTION_VIEW, Uri.parse("weixin://"))
+startActivity(intent)</code></pre>
+
+        <h3>H5 / Web 唤起 App（带降级处理）</h3>
+        <pre><code class="javascript">// App 未安装则跳转 App Store / 官网
+const timer = setTimeout(() => {
+  window.location.href = "https://apps.apple.com/app/idXXXXXX";
+}, 2000);
+
+window.location.href = "weixin://";
+
+// App 唤起成功，页面不可见时清除定时器
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) clearTimeout(timer);
+});</code></pre>
+
+        <hr />
+        <h2 id="sec-notes">六、注意事项</h2>
+        <ul>
+          <li><strong>iOS 9+</strong>：需在 <code>Info.plist</code> 中声明 <code>LSApplicationQueriesSchemes</code>，才能使用 <code>canOpenURL:</code> 检测 App 是否安装。</li>
+          <li><strong>Android 11+（API 30）</strong>：需在 <code>AndroidManifest.xml</code> 中声明 <code>&lt;queries&gt;</code> 元素才能查询其他应用的 Scheme。</li>
+          <li>部分 App 的 Scheme 会随版本更新而变化，且官方通常不对外公布，以上内容仅供参考，建议以实际测试为准。</li>
+        </ul>
+      </article>
+    </main>
+  </div>
+
+  <script>
+(() => {
+    const sectionConfig = [
+      { key: "system-common", mountId: "tbl-system-common", columns: ["Scheme", "说明", "操作"] },
+      { key: "system-ios", mountId: "tbl-system-ios", columns: ["Scheme", "说明", "操作"] },
+      { key: "system-ios-settings", mountId: "tbl-system-ios-settings", columns: ["Scheme", "说明", "操作"] },
+      { key: "system-android", mountId: "tbl-system-android", columns: ["Scheme", "说明", "操作"] },
+      { key: "cn-social", mountId: "tbl-cn-social", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "cn-pay", mountId: "tbl-cn-pay", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "cn-video", mountId: "tbl-cn-video", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "cn-shopping", mountId: "tbl-cn-shopping", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "cn-map", mountId: "tbl-cn-map", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "cn-tools", mountId: "tbl-cn-tools", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "global", mountId: "tbl-global", columns: ["App", "Scheme", "说明", "操作"] },
+      { key: "browser", mountId: "tbl-browser", columns: ["浏览器", "Scheme", "说明", "操作"] }
+    ];
+
+    /** @type {Array<Record<string, string>>} */
+    const schemeData = [
+      { section: "system-common", "Scheme": "tel:", "用途": "拨打电话", "示例": "tel:10086" },
+      { section: "system-common", "Scheme": "sms:", "用途": "发送短信", "示例": "sms:10086?body=查询余额" },
+      { section: "system-common", "Scheme": "smsto:", "用途": "发送短信（Android）", "示例": "smsto:10086:查询余额" },
+      { section: "system-common", "Scheme": "mailto:", "用途": "发送邮件", "示例": "mailto:test@example.com?subject=标题&body=内容" },
+      { section: "system-ios", "Scheme": "maps://", "用途": "Apple 地图", "示例": "maps://?q=北京故宫" },
+      { section: "system-ios", "Scheme": "facetime:", "用途": "FaceTime 视频", "示例": "facetime:user@icloud.com" },
+      { section: "system-ios", "Scheme": "facetime-audio:", "用途": "FaceTime 语音", "示例": "facetime-audio:user@icloud.com" },
+      { section: "system-ios", "Scheme": "itms-apps://", "用途": "App Store", "示例": "itms-apps://itunes.apple.com/app/idXXXXXX" },
+      { section: "system-ios", "Scheme": "shortcuts://", "用途": "快捷指令", "示例": "shortcuts://run-shortcut?name=指令名称" },
+      { section: "system-ios", "Scheme": "App-Prefs:", "用途": "系统设置", "示例": "App-Prefs:WIFI、App-Prefs:Bluetooth" },
+      { section: "system-ios", "Scheme": "music://", "用途": "Apple Music", "示例": "music://" },
+      { section: "system-ios", "Scheme": "photos-redirect://", "用途": "跳转相册", "示例": "photos-redirect://" },
+      { section: "system-ios", "Scheme": "calshow://", "用途": "跳转日历", "示例": "calshow://" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:WIFI", "跳转页面": "Wi-Fi 设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:Bluetooth", "跳转页面": "蓝牙设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:NOTIFICATIONS_ID", "跳转页面": "通知设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:LOCATION_SERVICES", "跳转页面": "定位服务" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:Privacy", "跳转页面": "隐私设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:General", "跳转页面": "通用设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:DISPLAY", "跳转页面": "显示与亮度" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:CASTLE", "跳转页面": "iCloud 设置" },
+      { section: "system-ios-settings", "Scheme": "App-Prefs:DO_NOT_DISTURB", "跳转页面": "勿扰模式" },
+      { section: "system-android", "Scheme": "geo:", "用途": "打开地图", "示例": "geo:39.916,116.397?q=北京" },
+      { section: "system-android", "Scheme": "market://", "用途": "Google Play", "示例": "market://details?id=com.package.name" },
+      { section: "system-android", "Scheme": "intent:", "用途": "Intent 调用", "示例": "intent://...#Intent;scheme=xxx;package=com.xxx;end" },
+      { section: "system-android", "Scheme": "content:", "用途": "访问内容提供者", "示例": "content://contacts/people/" },
+      { section: "cn-social", "App": "微信", "Scheme": "weixin://", "用途": "打开微信" },
+      { section: "cn-social", "App": "微信", "Scheme": "weixin://dl/scan", "用途": "扫一扫" },
+      { section: "cn-social", "App": "微信", "Scheme": "weixin://dl/moments", "用途": "朋友圈" },
+      { section: "cn-social", "App": "微信", "Scheme": "weixin://dl/settings", "用途": "打开设置" },
+      { section: "cn-social", "App": "微信", "Scheme": "weixin://dl/floatbottle", "用途": "漂流瓶" },
+      { section: "cn-social", "App": "QQ", "Scheme": "mqq://", "用途": "打开 QQ" },
+      { section: "cn-social", "App": "QQ", "Scheme": "mqq://im/chat?chat_type=wpa&uin=QQ号&version=1", "用途": "打开与某人的会话" },
+      { section: "cn-social", "App": "微博", "Scheme": "sinaweibo://", "用途": "打开微博" },
+      { section: "cn-social", "App": "微博", "Scheme": "sinaweibo://compose", "用途": "发微博" },
+      { section: "cn-social", "App": "微博", "Scheme": "sinaweibo://qrcode", "用途": "扫一扫" },
+      { section: "cn-social", "App": "钉钉", "Scheme": "dingtalk://", "用途": "打开钉钉" },
+      { section: "cn-social", "App": "飞书", "Scheme": "lark://", "用途": "打开飞书" },
+      { section: "cn-pay", "App": "支付宝", "Scheme": "alipays://", "用途": "打开支付宝（HTTPS 安全）" },
+      { section: "cn-pay", "App": "支付宝", "Scheme": "alipay://", "用途": "打开支付宝" },
+      { section: "cn-pay", "App": "支付宝", "Scheme": "alipays://platformapi/startapp?saId=10000007", "用途": "扫一扫" },
+      { section: "cn-pay", "App": "支付宝", "Scheme": "alipays://platformapi/startapp?saId=20000056", "用途": "付款码" },
+      { section: "cn-pay", "App": "支付宝", "Scheme": "alipays://platformapi/startapp?saId=20000003", "用途": "余额宝" },
+      { section: "cn-pay", "App": "云闪付", "Scheme": "upwallet://", "用途": "打开云闪付" },
+      { section: "cn-video", "App": "抖音", "Scheme": "snssdk1128://", "用途": "打开抖音" },
+      { section: "cn-video", "App": "抖音", "Scheme": "douyin://", "用途": "打开抖音（备用）" },
+      { section: "cn-video", "App": "快手", "Scheme": "kwai://", "用途": "打开快手" },
+      { section: "cn-video", "App": "哔哩哔哩", "Scheme": "bilibili://", "用途": "打开 B 站" },
+      { section: "cn-video", "App": "哔哩哔哩", "Scheme": "bilibili://video/BV号", "用途": "打开视频" },
+      { section: "cn-video", "App": "哔哩哔哩", "Scheme": "bilibili://live/直播间号", "用途": "打开直播间" },
+      { section: "cn-video", "App": "小红书", "Scheme": "xhsdiscover://", "用途": "打开小红书" },
+      { section: "cn-video", "App": "优酷", "Scheme": "youku://", "用途": "打开优酷" },
+      { section: "cn-video", "App": "爱奇艺", "Scheme": "iqiyi://", "用途": "打开爱奇艺" },
+      { section: "cn-video", "App": "腾讯视频", "Scheme": "tenvideo://", "用途": "打开腾讯视频" },
+      { section: "cn-shopping", "App": "淘宝", "Scheme": "taobao://", "用途": "打开淘宝" },
+      { section: "cn-shopping", "App": "淘宝", "Scheme": "taobao://page/item?id=商品ID", "用途": "打开商品页" },
+      { section: "cn-shopping", "App": "天猫", "Scheme": "tmall://", "用途": "打开天猫" },
+      { section: "cn-shopping", "App": "京东", "Scheme": "openapp.jdmobile://", "用途": "打开京东" },
+      { section: "cn-shopping", "App": "京东", "Scheme": "openapp.jdmobile://virtual?params={\"category\":\"jump\",\"des\":\"productDetail\",\"skuId\":\"商品ID\"}", "用途": "打开商品页" },
+      { section: "cn-shopping", "App": "拼多多", "Scheme": "pinduoduo://", "用途": "打开拼多多" },
+      { section: "cn-shopping", "App": "美团", "Scheme": "imeituan://", "用途": "打开美团" },
+      { section: "cn-shopping", "App": "饿了么", "Scheme": "eleme://", "用途": "打开饿了么" },
+      { section: "cn-shopping", "App": "闲鱼", "Scheme": "fleamarket://", "用途": "打开闲鱼" },
+      { section: "cn-map", "App": "百度地图", "Scheme": "baidumap://", "用途": "打开百度地图" },
+      { section: "cn-map", "App": "百度地图", "Scheme": "baidumap://map/direction?destination=name:目的地|latlng:lat,lng&mode=driving", "用途": "导航到目的地" },
+      { section: "cn-map", "App": "高德地图（iOS）", "Scheme": "iosamap://", "用途": "打开高德地图" },
+      { section: "cn-map", "App": "高德地图（Android）", "Scheme": "androidamap://", "用途": "打开高德地图" },
+      { section: "cn-map", "App": "高德地图", "Scheme": "iosamap://navi?sourceApplication=xxx&lat=纬度&lon=经度&dev=0&style=2", "用途": "导航" },
+      { section: "cn-map", "App": "腾讯地图", "Scheme": "qqmap://", "用途": "打开腾讯地图" },
+      { section: "cn-map", "App": "腾讯地图", "Scheme": "qqmap://map/routeplan?type=drive&to=目的地&tocoord=lat,lng", "用途": "路线规划" },
+      { section: "cn-map", "App": "滴滴出行", "Scheme": "diditaxi://", "用途": "打开滴滴出行" },
+      { section: "cn-tools", "App": "百度 App", "Scheme": "baiduboxapp://", "用途": "打开百度 App" },
+      { section: "cn-tools", "App": "网易云音乐", "Scheme": "orpheus://", "用途": "打开网易云音乐" },
+      { section: "cn-tools", "App": "QQ 音乐", "Scheme": "qqmusic://", "用途": "打开 QQ 音乐" },
+      { section: "cn-tools", "App": "WPS", "Scheme": "kingsoftoffice://", "用途": "打开 WPS" },
+      { section: "cn-tools", "App": "携程", "Scheme": "ctrip://", "用途": "打开携程" },
+      { section: "cn-tools", "App": "12306", "Scheme": "cn.12306://", "用途": "打开 12306" },
+      { section: "cn-tools", "App": "大众点评", "Scheme": "dianping://", "用途": "打开大众点评" },
+      { section: "global", "App": "YouTube", "Scheme": "youtube://", "用途": "打开 YouTube" },
+      { section: "global", "App": "YouTube", "Scheme": "youtube://watch?v=视频ID", "用途": "打开指定视频" },
+      { section: "global", "App": "YouTube", "Scheme": "vnd.youtube:视频ID", "用途": "打开视频（备用）" },
+      { section: "global", "App": "Instagram", "Scheme": "instagram://", "用途": "打开 Instagram" },
+      { section: "global", "App": "Instagram", "Scheme": "instagram://user?username=用户名", "用途": "打开用户主页" },
+      { section: "global", "App": "Instagram", "Scheme": "instagram://camera", "用途": "打开相机" },
+      { section: "global", "App": "Twitter / X", "Scheme": "twitter://", "用途": "打开 Twitter/X" },
+      { section: "global", "App": "Twitter / X", "Scheme": "twitter://user?screen_name=用户名", "用途": "打开用户主页" },
+      { section: "global", "App": "Twitter / X", "Scheme": "twitter://post?message=内容", "用途": "发推" },
+      { section: "global", "App": "Facebook", "Scheme": "fb://", "用途": "打开 Facebook" },
+      { section: "global", "App": "Facebook", "Scheme": "fb://profile/用户ID", "用途": "打开个人主页" },
+      { section: "global", "App": "Facebook", "Scheme": "fb://page/页面ID", "用途": "打开公共主页" },
+      { section: "global", "App": "WhatsApp", "Scheme": "whatsapp://", "用途": "打开 WhatsApp" },
+      { section: "global", "App": "WhatsApp", "Scheme": "whatsapp://send?phone=手机号&text=内容", "用途": "发消息给指定号码" },
+      { section: "global", "App": "Telegram", "Scheme": "tg://", "用途": "打开 Telegram" },
+      { section: "global", "App": "Telegram", "Scheme": "tg://resolve?domain=用户名", "用途": "打开用户 / 频道" },
+      { section: "global", "App": "Telegram", "Scheme": "tg://join?invite=邀请码", "用途": "加入群组" },
+      { section: "global", "App": "TikTok", "Scheme": "snssdk1233://", "用途": "打开 TikTok" },
+      { section: "global", "App": "Snapchat", "Scheme": "snapchat://", "用途": "打开 Snapchat" },
+      { section: "global", "App": "LinkedIn", "Scheme": "linkedin://", "用途": "打开 LinkedIn" },
+      { section: "global", "App": "LinkedIn", "Scheme": "linkedin://profile/用户ID", "用途": "打开个人主页" },
+      { section: "global", "App": "Pinterest", "Scheme": "pinterest://", "用途": "打开 Pinterest" },
+      { section: "global", "App": "Reddit", "Scheme": "reddit://", "用途": "打开 Reddit" },
+      { section: "global", "App": "Reddit", "Scheme": "reddit://r/子版块名", "用途": "打开子版块" },
+      { section: "global", "App": "Spotify", "Scheme": "spotify://", "用途": "打开 Spotify" },
+      { section: "global", "App": "Spotify", "Scheme": "spotify://track/曲目ID", "用途": "打开歌曲" },
+      { section: "global", "App": "Netflix", "Scheme": "nflx://", "用途": "打开 Netflix" },
+      { section: "global", "App": "Zoom", "Scheme": "zoomus://", "用途": "打开 Zoom" },
+      { section: "global", "App": "Zoom", "Scheme": "zoomus://zoom.us/join?confno=会议ID", "用途": "加入会议" },
+      { section: "global", "App": "Slack", "Scheme": "slack://", "用途": "打开 Slack" },
+      { section: "global", "App": "Dropbox", "Scheme": "dbapi-2://", "用途": "打开 Dropbox" },
+      { section: "global", "App": "Google Maps", "Scheme": "comgooglemaps://", "用途": "打开 Google 地图" },
+      { section: "global", "App": "Google Maps", "Scheme": "comgooglemaps://?q=搜索词", "用途": "搜索地点" },
+      { section: "global", "App": "Google Maps", "Scheme": "comgooglemaps://?daddr=目的地&directionsmode=driving", "用途": "导航" },
+      { section: "global", "App": "Google Chrome", "Scheme": "googlechrome://", "用途": "用 Chrome 打开网页" },
+      { section: "global", "App": "Gmail", "Scheme": "googlegmail://", "用途": "打开 Gmail" },
+      { section: "global", "App": "Google Drive", "Scheme": "googledrive://", "用途": "打开 Google Drive" },
+      { section: "browser", "浏览器": "Chrome（iOS）", "Scheme": "googlechrome://", "用途": "打开普通 URL" },
+      { section: "browser", "浏览器": "Chrome（iOS）", "Scheme": "googlechromes://", "用途": "打开 HTTPS URL" },
+      { section: "browser", "浏览器": "Firefox", "Scheme": "firefox://", "用途": "打开 Firefox" },
+      { section: "browser", "浏览器": "Firefox", "Scheme": "firefox://open-url?url=https://example.com", "用途": "打开指定 URL" },
+      { section: "browser", "浏览器": "Edge", "Scheme": "microsoft-edge://", "用途": "打开 Edge" },
+      { section: "browser", "浏览器": "Edge", "Scheme": "microsoft-edge://https://example.com", "用途": "打开指定 URL" },
+      { section: "browser", "浏览器": "Opera", "Scheme": "opera://", "用途": "打开 Opera" },
+      { section: "browser", "浏览器": "UC 浏览器", "Scheme": "ucbrowser://", "用途": "打开 UC 浏览器" },
+      { section: "browser", "浏览器": "QQ 浏览器", "Scheme": "mqqbrowser://link?url=https://example.com", "用途": "打开指定 URL" },
+      { section: "browser", "浏览器": "百度浏览器", "Scheme": "bdbrowser://", "用途": "打开百度浏览器" },
+      { section: "browser", "浏览器": "Via", "Scheme": "via://", "用途": "打开 Via 浏览器" }
+    ];
+
+    const esc = (s) => String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+    const PLACEHOLDER_RE = /(商品ID|QQ号|用户名|用户ID|页面ID|视频ID|直播间号|邀请码|会议ID|子版块名|曲目ID|目的地|搜索词|手机号|内容|纬度|经度|lat,lng|lat|lng|idXXXXXX|package\.name)/g;
+
+    const bySection = schemeData.reduce((acc, row) => {
+      (acc[row.section] ||= []).push(row);
+      return acc;
+    }, {});
+
+    const splitParams = (text) => String(text || "").split(/[,，]/).map((s) => s.trim()).filter(Boolean);
+
+    function resolveScheme(template, inputText) {
+      const placeholders = [...String(template).matchAll(PLACEHOLDER_RE)].map((m) => m[0]);
+      const params = splitParams(inputText);
+      if (!placeholders.length || !params.length) return String(template || "");
+      let i = 0;
+      return String(template).replace(PLACEHOLDER_RE, () => params[i++] ?? params[0] ?? "");
+    }
+
+    function extractPlaceholders(template) {
+      const seen = new Set();
+      String(template || "").replace(PLACEHOLDER_RE, (m) => (seen.add(m), m));
+      PLACEHOLDER_RE.lastIndex = 0;
+      return Array.from(seen);
+    }
+
+    function renderDesc(row) {
+      const usage = row["用途"] || row["跳转页面"] || "";
+      const sample = row["示例"] || "";
+      if (usage && sample) return `${esc(usage)}<br /><small>示例：${esc(sample)}</small>`;
+      return esc(usage || sample || "");
+    }
+
+    function renderTable(columns, rows) {
+      const head = `<thead><tr>${columns.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead>`;
+      const body = rows.map((row) => `<tr>${columns.map((col) => {
+        if (col === "说明") return `<td>${renderDesc(row)}</td>`;
+        if (col === "操作") {
+          const scheme = String(row["Scheme"] || "");
+          const safe = esc(scheme);
+          const placeholders = extractPlaceholders(scheme);
+          const hint = placeholders.length ? `<span class="scheme-param-hint">参数：${esc(placeholders.join(" / "))}</span>` : "";
+          const input = placeholders.length ? `<input class="scheme-param-input" type="text" placeholder="${esc(placeholders.join("，"))}" aria-label="输入参数后替换模板占位词" />` : "";
+          return `<td><div class="op-cell">${hint}${input}<span class="scheme-actions"><button type="button" class="open-btn" data-scheme="${safe}" aria-label="用系统打开「${safe}」">打开</button><button type="button" class="copy-btn" data-scheme="${safe}" aria-label="复制「${safe}」">复制</button></span></div></td>`;
+        }
+        if (col === "Scheme") return `<td><div class="scheme-cell"><code>${esc(row[col] || "")}</code></div></td>`;
+        return `<td>${esc(row[col] || "")}</td>`;
+      }).join("")}</tr>`).join("");
+      return `<div class="table-wrap" role="region" aria-label="数据表格"><table>${head}<tbody>${body}</tbody></table></div>`;
+    }
+
+    function mountTables() {
+      sectionConfig.forEach(({ key, mountId, columns }) => {
+        const mount = document.getElementById(mountId);
+        if (mount) mount.innerHTML = renderTable(columns, bySection[key] || []);
+      });
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.setAttribute("aria-hidden", "true");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.style.top = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          return document.execCommand("copy");
+        } finally {
+          ta.remove();
+        }
+      }
+    }
+
+    function showTip(host, ok, text) {
+      host.querySelectorAll(".copied").forEach((n) => n.remove());
+      const tip = document.createElement("span");
+      tip.className = "copied";
+      tip.textContent = text || (ok ? "已复制" : "复制失败");
+      host.appendChild(tip);
+      window.setTimeout(() => tip.remove(), ok ? 1200 : 2000);
+    }
+
+    function initActions() {
+      document.body.addEventListener("click", async (e) => {
+        const btn = e.target.closest(".open-btn,.copy-btn");
+        if (!btn) return;
+        const template = btn.dataset.scheme;
+        if (!template) return;
+        const wrapper = btn.closest(".scheme-cell");
+        const input = wrapper ? wrapper.querySelector(".scheme-param-input") : null;
+        if (input && !input.value.trim()) {
+          input.focus();
+          const host = btn.parentElement;
+          if (host) showTip(host, false, "请先填写参数");
+          return;
+        }
+        const scheme = resolveScheme(template, input ? input.value : "");
+        if (btn.classList.contains("open-btn")) {
+          window.location.assign(scheme);
+          return;
+        }
+        const host = btn.parentElement;
+        if (host) showTip(host, await copyText(scheme));
+      });
+
+      document.body.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        const input = e.target.closest(".scheme-param-input");
+        if (!input) return;
+        const wrap = input.closest(".scheme-cell");
+        const openBtn = wrap ? wrap.querySelector(".open-btn") : null;
+        if (openBtn) openBtn.click();
+      });
+
+      const tocSelect = document.getElementById("tocSelect");
+      if (tocSelect) {
+        tocSelect.addEventListener("change", () => {
+          if (!tocSelect.value) return;
+          const el = document.querySelector(tocSelect.value);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    }
+    mountTables();
+    initActions();
+})();
+  </script>
+</body>
+</html>
