@@ -1,0 +1,75 @@
+.scheme-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(4px);
+}
+
+.top-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px 10px;
+}
+
+.top-menu-wrap {
+  margin-top: 0;
+  overflow-x: auto;
+}
+
+.top-menu-wrap .ant-menu {
+  min-width: max-content;
+  border-bottom: none;
+  background: transparent;
+}
+
+.top-menu-wrap .ant-menu-item {
+  padding-inline: 14px !important;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.section-card {
+  margin-bottom: 16px;
+  scroll-margin-top: 84px;
+}
+
+.section-card .ant-table-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.section-card .ant-typography code {
+  white-space: normal;
+  word-break: break-all;
+}
+
+.final-link {
+  font-size: 12px;
+  margin-bottom: 0 !important;
+}
+
+.tip {
+  padding: 6px 2px 24px;
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 12px;
+  }
+
+  .section-card {
+    scroll-margin-top: 92px;
+  }
+}

@@ -1,0 +1,22 @@
+---
+description: Git 提交与分支协作规范
+alwaysApply: true
+---
+
+# 提交规范
+
+## Commit Message 格式
+- 提交信息统一使用：`<type>(<scope>): <subject>`。
+- `type` 建议使用：`feat`、`fix`、`refactor`、`docs`、`style`、`test`、`build`、`chore`、`perf`。
+- `subject` 使用简洁中文或英文短句，描述本次变更的核心目的，不写空泛内容。
+- 单次提交应聚焦单一主题，避免把无关修改混在同一个提交中。
+
+## 提交前检查
+- 提交前确保项目可通过基础检查：`npm run lint`、`npm run build`。
+- 若存在格式化规则，先执行格式化并确认无额外噪音改动。
+- 不提交构建产物与临时文件（例如 `dist/`、日志、IDE 临时文件）。
+
+## 分支与合并
+- 功能开发使用独立分支，分支名建议包含类型与简要描述，例如 `feat/login-page`。
+- 合并前先同步主分支最新代码，优先解决冲突后再发起合并。
+- Pull Request 描述应包含：变更目的、主要改动点、验证方式（或截图/录屏）。
