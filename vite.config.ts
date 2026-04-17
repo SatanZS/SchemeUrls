@@ -17,7 +17,7 @@ const currentBranch = getCurrentBranch()
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: currentBranch === 'Pages' ? 'pagesRoot' : 'dist',
+    outDir: currentBranch === 'gh-pages' ? 'docs' : 'dist',
   },
   server: {
     host: true,
